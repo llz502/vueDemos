@@ -8,5 +8,5 @@
 欢迎大家去了解一下
 ### 技术选型
 1. jquery作为底层库，给boostrap可用的API
-2. boostrap可以帮助快速搭建简洁大方的页面，但要依赖jquery
+2. boostrap可以帮助web工程师快速搭建简洁大方的页面，但要依赖jquery
 3. vue提供UI渲染，数据交互等方法指令
