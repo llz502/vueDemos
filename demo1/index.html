@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,27 +8,146 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>Document</title>
-<style>
+    <style>
 
-</style>
-<link rel="stylesheet" href="../lib/bootstrap.min.css">
-<script src="../lib/jquery.min.js"></script>
-<script src="../lib/bootstrap.min.js"></script>
-<script src="../lib/vue.js"></script>
+    </style>
+    <link rel="stylesheet" href="../lib/bootstrap.min.css">
+    <script src="../lib/jquery.min.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
+    <script src="../lib/vue.js"></script>
+    <script>
+        window.onload = function () {
+            var vm1 = new Vue({
+                el: '#box',
+                data: {
+                    pData:[],
+                    username:'',
+                    age:'',
+                    nowIndex:-1000,
+                    deleteButtonContent:'删除',
+                    deleteButtonAllContent:'删除全部',
+                    alertContent:'确认删除么？'
+                },
+                methods:{
+                    add:function(){
+                        this.pData.push({
+                            name:this.username,
+                            age:this.age
+                        });
+                        this.username = '';
+                        this.age = '';
+                    },
+                    deleteButton:function(deButton,index){
+                        nowIndex=index;
+                        if(deButton==='删除'){
+                            this.alertContent=`确认删除“${this.pData[index].name}”的档案么？`;
+                        }else if(deButton==='删除全部'){
+                            this.alertContent='确认删除全部人事档案么？';
+                        }
+                    },
+                    deleteMsg:function(nIndex){
+                        if(nIndex === -2){
+                            this.pData = [];
+                        }else{
+                             this.pData.splice(nIndex,1);
+                        }
+                    }
+                }
+            })
+        }
+    </script>
 </head>
+
 <body>
-<div id="app">
-{{msg}}
-</div>
-<script>
-    window.onload = function(){
-        var vm1 = new Vue({
-            el:'#app',
-            data:{
-                msg:'welcome here!'
-            }
-        })
-    }
-</script>
+    <div id="box" class="container" style="max-width:500px;margin:0 auto;">
+        <form style="border:1px solid #ddd;margin:30px auto;padding:10px;">
+            <h4 class="text-center text-info">人事登记</h4>
+            <div class="form-group">
+                <label for="username">用户名：</label>
+                <input type="text" class="form-control" id="username" 
+                placeholder="输入用户名" v-model="username">
+            </div>
+            <div class="form-group">
+                <label for="age">年&nbsp;&nbsp;&nbsp;&nbsp;龄：</label>
+                <input type="text" class="form-control" id="age" 
+                placeholder="输入年龄 "v-model="age">
+            </div>
+            <div class="form-group">
+                <input type="button" value="添加" 
+                class="btn btn-primary" v-on:click="add()">
+                <input type="reset" value="重置" class="btn btn-danger">
+            </div>
+        </form>
+        <hr>
+        <table class="table table-bordered table-hover">
+            <caption class="text-center text-info">
+                <h4>用户信息表</h4>
+            </caption>
+            <tr>
+                <th class="text-center">序号</th>
+                <th class="text-center">名字</th>
+                <th class="text-center">年龄</th>
+                <th class="text-center">操作</th>
+            </tr>
+            <tr class="text-center" v-for="(item,index) in pData">
+                <td>{{index+1}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.age}}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" 
+                    data-target="#layer"  v-on:click="deleteButton(deleteButtonContent,index)">{{deleteButtonContent}}</button>
+                </td>
+            </tr>
+            <tr v-show="pData.length!==0">
+                <td colspan="4" class="text-right">
+                    <button class="btn btn-danger btn-sm" data-toggle="modal" 
+                    data-target="#layer" v-on:click="deleteButton(deleteButtonAllContent,-2)">{{deleteButtonAllContent}}</button>
+                </td>
+            </tr>
+            <tr v-show="pData.length===0">
+                <td colspan="4" class="text-right">
+                    <p>暂无数据。。。。</p>
+                </td>
+            </tr>
+        </table>
+
+        <!-- 模拟框 弹出框 -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="layer" 
+        data-index="{{nowIndex}}">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">{{alertContent}}</h4>
+                    </div>
+
+                    <!-- <div class="modal-body">
+
+                    </div> -->
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal" 
+                        v-on:click="deleteMsg(nowIndex)">确认</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+
+
+
+        <!-- <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            警告
+        </div> -->
+    </div>
 </body>
+
 </html>
